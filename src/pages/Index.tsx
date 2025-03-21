@@ -14,7 +14,7 @@ const Index: React.FC = () => {
     <div className="min-h-screen relative overflow-hidden">
       <Stars count={150} />
       <Navbar />
-      <Hero name="Alex" />
+      <Hero name="KVS" />
     </div>
   );
 };
