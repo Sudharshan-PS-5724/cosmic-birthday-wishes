@@ -74,7 +74,7 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
     
     if (guess.toLowerCase() === wish.sender.toLowerCase()) {
       setIsCorrect(true);
-      markWishAsGuessed(wish.id);
+      markWishAsGuessed(wish.id, true);
       toast({
         title: "Correct! 🎉",
         description: `Great job! That was ${wish.sender}`,
@@ -92,7 +92,7 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
       
       if (attempts >= MAX_ATTEMPTS - 1) {
         setRevealed(true);
-        markWishAsGuessed(wish.id);
+        markWishAsGuessed(wish.id, false);
         setTimeout(() => {
           onNext();
         }, 3000);
@@ -103,7 +103,7 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
   
   const handleSkip = () => {
     setRevealed(true);
-    markWishAsGuessed(wish.id);
+    markWishAsGuessed(wish.id, false);
     toast({
       title: "Skipped",
       description: `This wish was from ${wish.sender}`,
@@ -146,11 +146,13 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
         </div>
       </div>
       
-      <Progress value={gameProgress} className="h-1.5 mb-4 bg-space-darker/50" 
-        indicatorClassName={cn(
-          gameProgress < 60 ? "bg-space-teal" : 
-          gameProgress < 80 ? "bg-yellow-500" : 
-          "bg-red-500"
+      <Progress 
+        value={gameProgress} 
+        className={cn(
+          "h-1.5 mb-4 bg-space-darker/50",
+          gameProgress < 60 ? "text-space-teal" : 
+          gameProgress < 80 ? "text-yellow-500" : 
+          "text-red-500"
         )}
       />
       

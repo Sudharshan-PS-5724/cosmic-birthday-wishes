@@ -51,6 +51,9 @@ const GuessGame: React.FC = () => {
     return Math.round(((currentWishIndex + 1) / wishes.length) * 100);
   };
   
+  // Only get the current wish for display
+  const currentWish = wishes[currentWishIndex];
+  
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
       {isFinished ? (
@@ -133,10 +136,12 @@ const GuessGame: React.FC = () => {
             </div>
           )}
           
-          <WishCard 
-            wish={wishes[currentWishIndex]} 
-            onNext={handleNext}
-          />
+          {currentWish && (
+            <WishCard 
+              wish={currentWish} 
+              onNext={handleNext}
+            />
+          )}
           
           <div className="flex justify-between items-center mt-8">
             <div className="flex items-center">
