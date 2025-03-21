@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import BirthdayCake from './BirthdayCake';
 import { ArrowDown } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Hero: React.FC<{ name: string }> = ({ name }) => {
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
   const quoteRef = useRef<HTMLParagraphElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     // Add staggered animations
@@ -34,7 +36,7 @@ const Hero: React.FC<{ name: string }> = ({ name }) => {
       <div className="absolute inset-0 bg-gradient-radial from-space-purple/20 to-transparent opacity-30 z-1"></div>
       
       {/* Content container */}
-      <div className="relative z-10 max-w-4xl mx-auto">
+      <div className="relative z-10 max-w-6xl w-full mx-auto">
         <h1 
           ref={headingRef}
           className="font-display font-bold text-4xl md:text-6xl lg:text-7xl mb-8 opacity-0 translate-y-10 transition-all duration-700 ease-out shimmer-text"
@@ -42,19 +44,25 @@ const Hero: React.FC<{ name: string }> = ({ name }) => {
           Happy Birthday, {name}!
         </h1>
         
-        <div 
-          ref={imageRef}
-          className="relative w-48 h-48 md:w-64 md:h-64 mx-auto mb-12 opacity-0 translate-y-10 transition-all duration-700 ease-out delay-300"
-        >
-          <img 
-            src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9" 
-            alt={name} 
-            className="w-full h-full object-cover rounded-full border-4 border-space-teal/50 shadow-[0_0_30px_rgba(62,252,252,0.3)]"
-          />
-          <div className="absolute -inset-1 rounded-full blur-md bg-space-teal/20 -z-10"></div>
+        <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} items-center justify-center gap-8 md:gap-16`}>
+          {/* Left side - Photo */}
+          <div 
+            ref={imageRef}
+            className={`relative w-48 h-48 md:w-64 md:h-64 mx-auto opacity-0 translate-y-10 transition-all duration-700 ease-out delay-300 ${isMobile ? 'mb-12' : ''}`}
+          >
+            <img 
+              src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9" 
+              alt={name} 
+              className="w-full h-full object-cover rounded-full border-4 border-space-teal/50 shadow-[0_0_30px_rgba(62,252,252,0.3)]"
+            />
+            <div className="absolute -inset-1 rounded-full blur-md bg-space-teal/20 -z-10"></div>
+          </div>
+          
+          {/* Right side - Cake */}
+          <div className={`${isMobile ? '' : 'flex-1'}`}>
+            <BirthdayCake />
+          </div>
         </div>
-        
-        <BirthdayCake />
         
         <p 
           ref={quoteRef}
