@@ -29,7 +29,7 @@ const Hero: React.FC<{ name: string }> = ({ name }) => {
   }, []);
   
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden pt-24">
       <div className="absolute inset-0 bg-space-darker z-0"></div>
       
       {/* Spotlight effect */}
