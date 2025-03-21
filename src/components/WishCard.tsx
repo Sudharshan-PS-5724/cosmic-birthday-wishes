@@ -4,7 +4,9 @@ import { Wish, useWishContext } from '@/context/WishContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Check, X } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
 
 interface WishCardProps {
   wish: Wish;
@@ -20,6 +22,11 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [visibleMessage, setVisibleMessage] = useState('');
   const [messageIndex, setMessageIndex] = useState(0);
+  const [previousGuesses, setPreviousGuesses] = useState<string[]>([]);
+  const [gameProgress, setGameProgress] = useState(0);
+  const { toast } = useToast();
+  
+  const MAX_ATTEMPTS = 5;
   
   useEffect(() => {
     if (cardRef.current) {
@@ -38,16 +45,52 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
     }
   }, [wish.message, messageIndex]);
   
+  useEffect(() => {
+    setGameProgress(Math.min(100, (attempts / MAX_ATTEMPTS) * 100));
+  }, [attempts]);
+  
   const handleGuess = () => {
+    if (!guess.trim()) {
+      toast({
+        title: "Empty guess",
+        description: "Please enter a name to guess",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (previousGuesses.includes(guess.toLowerCase())) {
+      toast({
+        title: "Already guessed",
+        description: `You already tried "${guess}"`,
+        variant: "destructive",
+      });
+      setGuess('');
+      return;
+    }
+    
+    // Add to previous guesses
+    setPreviousGuesses(prev => [...prev, guess.toLowerCase()]);
+    
     if (guess.toLowerCase() === wish.sender.toLowerCase()) {
       setIsCorrect(true);
       markWishAsGuessed(wish.id);
+      toast({
+        title: "Correct! 🎉",
+        description: `Great job! That was ${wish.sender}`,
+      });
       setTimeout(() => {
         onNext();
       }, 2000);
     } else {
       setAttempts(prev => prev + 1);
-      if (attempts >= 4) {
+      toast({
+        title: "Not quite right",
+        description: `${MAX_ATTEMPTS - attempts - 1} guesses remaining`,
+        variant: "destructive",
+      });
+      
+      if (attempts >= MAX_ATTEMPTS - 1) {
         setRevealed(true);
         markWishAsGuessed(wish.id);
         setTimeout(() => {
@@ -61,6 +104,10 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
   const handleSkip = () => {
     setRevealed(true);
     markWishAsGuessed(wish.id);
+    toast({
+      title: "Skipped",
+      description: `This wish was from ${wish.sender}`,
+    });
     setTimeout(() => {
       onNext();
     }, 1500);
@@ -89,10 +136,23 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
         ))}
       </div>
       
-      <div className="flex items-center mb-4">
-        <Sparkles className="h-5 w-5 mr-2 text-space-teal" />
-        <h3 className="text-lg font-medium text-space-teal">Cosmic Message</h3>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <Sparkles className="h-5 w-5 mr-2 text-space-teal" />
+          <h3 className="text-lg font-medium text-space-teal">Cosmic Message</h3>
+        </div>
+        <div className="text-sm font-medium text-gray-400">
+          {attempts}/{MAX_ATTEMPTS} Guesses
+        </div>
       </div>
+      
+      <Progress value={gameProgress} className="h-1.5 mb-4 bg-space-darker/50" 
+        indicatorClassName={cn(
+          gameProgress < 60 ? "bg-space-teal" : 
+          gameProgress < 80 ? "bg-yellow-500" : 
+          "bg-red-500"
+        )}
+      />
       
       <div className="mb-8 min-h-[120px]">
         <p className="text-xl leading-relaxed">"{visibleMessage}"</p>
@@ -103,7 +163,7 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
         (isCorrect || revealed) ? "opacity-0 pointer-events-none" : "opacity-100"
       )}>
         <p className="mb-2 text-sm font-medium text-gray-300">
-          Guess who sent this wish? ({5 - attempts} attempts left)
+          Guess who sent this wish? ({MAX_ATTEMPTS - attempts} attempts left)
         </p>
         
         <div className="flex gap-2">
@@ -123,6 +183,23 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
           </Button>
         </div>
         
+        {previousGuesses.length > 0 && (
+          <div className="mt-4 space-y-1">
+            <p className="text-xs text-gray-400">Previous guesses:</p>
+            <div className="flex flex-wrap gap-1.5">
+              {previousGuesses.map((prevGuess, index) => (
+                <div 
+                  key={index} 
+                  className="text-xs px-2 py-1 rounded-full bg-space-darker/80 border border-space-purple/30 flex items-center"
+                >
+                  <span>{prevGuess}</span>
+                  <X className="ml-1 h-3 w-3 text-red-400" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
         <Button 
           variant="ghost" 
           className="mt-4 text-sm text-gray-400 hover:text-white"
@@ -139,7 +216,10 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
         <div className="text-center p-4 rounded-lg bg-space-darker/50 border border-space-purple/20">
           {isCorrect ? (
             <>
-              <p className="text-xl font-medium text-space-teal mb-2">That's correct!</p>
+              <div className="flex items-center justify-center mb-2">
+                <Check className="h-5 w-5 text-green-500 mr-2" />
+                <p className="text-xl font-medium text-space-teal">That's correct!</p>
+              </div>
               <p className="text-gray-300">This wish was from {wish.sender}</p>
             </>
           ) : (

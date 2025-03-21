@@ -6,6 +6,7 @@ export interface Wish {
   message: string;
   sender: string;
   guessed: boolean;
+  guessedCorrectly?: boolean;
 }
 
 interface WishContextType {
@@ -13,7 +14,7 @@ interface WishContextType {
   setWishes: React.Dispatch<React.SetStateAction<Wish[]>>;
   currentWishIndex: number;
   setCurrentWishIndex: React.Dispatch<React.SetStateAction<number>>;
-  markWishAsGuessed: (id: number) => void;
+  markWishAsGuessed: (id: number, isCorrect?: boolean) => void;
 }
 
 const WishContext = createContext<WishContextType | undefined>(undefined);
@@ -66,10 +67,10 @@ export const WishProvider = ({ children }: WishProviderProps) => {
   
   const [currentWishIndex, setCurrentWishIndex] = useState(0);
   
-  const markWishAsGuessed = (id: number) => {
+  const markWishAsGuessed = (id: number, isCorrect: boolean = false) => {
     setWishes(prevWishes => 
       prevWishes.map(wish => 
-        wish.id === id ? { ...wish, guessed: true } : wish
+        wish.id === id ? { ...wish, guessed: true, guessedCorrectly: isCorrect } : wish
       )
     );
   };
