@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Wish, useWishContext } from '@/context/WishContext';
 import WishCard from './WishCard';
@@ -12,7 +11,6 @@ const GuessGame: React.FC = () => {
   const { wishes, currentWishIndex, setCurrentWishIndex } = useWishContext();
   const [isFinished, setIsFinished] = useState(false);
   const [showComet, setShowComet] = useState(false);
-  const [correctGuesses, setCorrectGuesses] = useState(0);
   const [gameStats, setGameStats] = useState({
     totalWishes: wishes.length,
     guessedCorrectly: 0,
@@ -138,6 +136,7 @@ const GuessGame: React.FC = () => {
           
           {currentWish && (
             <WishCard 
+              key={currentWish.id} 
               wish={currentWish} 
               onNext={handleNext}
             />

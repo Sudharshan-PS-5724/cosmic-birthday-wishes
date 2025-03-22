@@ -28,13 +28,27 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
   
   const MAX_ATTEMPTS = 5;
   
+  // Reset state when wish changes
   useEffect(() => {
+    setGuess('');
+    setAttempts(0);
+    setRevealed(false);
+    setIsCorrect(false);
+    setVisibleMessage('');
+    setMessageIndex(0);
+    setPreviousGuesses([]);
+    setGameProgress(0);
+    
     if (cardRef.current) {
+      cardRef.current.classList.remove('opacity-100', 'translate-y-0');
+      cardRef.current.classList.add('opacity-0', 'translate-y-20');
       setTimeout(() => {
         cardRef.current?.classList.add('opacity-100', 'translate-y-0');
       }, 300);
     }
-    
+  }, [wish.id]);
+  
+  useEffect(() => {
     // Text animation
     if (messageIndex < wish.message.length) {
       const timer = setTimeout(() => {
