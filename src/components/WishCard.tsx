@@ -186,7 +186,7 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
             Guess who sent this wish? ({MAX_ATTEMPTS - attempts} attempts left)
           </p>
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 relative">
             <Input
               ref={inputRef}
               value={guess}
@@ -194,11 +194,14 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
               placeholder="Enter name..."
               className="flex-1 bg-galaxy-dark/50 border-galaxy-purple/30 focus:border-galaxy-blue focus-visible:ring-galaxy-blue"
               onKeyDown={(e) => e.key === 'Enter' && handleGuess()}
+              autoComplete="off"
+              style={{ zIndex: 10 }}
             />
             
             <Button 
               onClick={handleGuess}
               className="bg-galaxy-purple hover:bg-galaxy-purple/80"
+              style={{ zIndex: 10 }}
             >
               Guess
             </Button>

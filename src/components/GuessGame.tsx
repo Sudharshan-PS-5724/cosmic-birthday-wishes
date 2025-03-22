@@ -12,6 +12,7 @@ const GuessGame: React.FC = () => {
   const { wishes, currentWishIndex, setCurrentWishIndex } = useWishContext();
   const [isFinished, setIsFinished] = useState(false);
   const [showComet, setShowComet] = useState(false);
+  const [audioLoaded, setAudioLoaded] = useState(false);
   const [gameStats, setGameStats] = useState({
     totalWishes: wishes.length,
     guessedCorrectly: 0,
@@ -21,14 +22,26 @@ const GuessGame: React.FC = () => {
   
   useEffect(() => {
     // Initialize audio player
-    audioRef.current = new Audio('/coward.mp3');
-    audioRef.current.volume = 0.4;
-    audioRef.current.loop = true;
-    audioRef.current.play().catch(err => console.log('Audio autoplay prevented:', err));
+    const audio = new Audio('/coward.mp3');
+    audio.volume = 0.4;
+    audio.loop = true;
+    audioRef.current = audio;
+    
+    // Add event listener to check when audio is loaded
+    audio.addEventListener('canplaythrough', () => {
+      setAudioLoaded(true);
+      audio.play().catch(err => console.log('Audio autoplay prevented:', err));
+    });
+    
+    // Add error listener
+    audio.addEventListener('error', (e) => {
+      console.log('Audio error:', e);
+    });
     
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.src = '';
         audioRef.current = null;
       }
     };
