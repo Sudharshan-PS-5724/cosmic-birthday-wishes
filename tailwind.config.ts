@@ -37,6 +37,14 @@ export default {
 					pink: '#F53D81',
 					teal: '#3EFCFC',
 				},
+				galaxy: {
+					dark: '#131136',
+					darker: '#0A0A24',
+					purple: '#5B51D8',
+					blue: '#8AB4F8',
+					pink: '#CE93D8',
+					teal: '#66F0F0',
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
