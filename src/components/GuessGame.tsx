@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
-import { useWishContext } from '@/context/WishContext';
+import { Wish, useWishContext } from '@/context/WishContext';
 import WishCard from './WishCard';
 import { Button } from '@/components/ui/button';
-import { Trophy } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { ArrowRight, Trophy, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Progress } from '@/components/ui/progress';
 
@@ -63,15 +63,15 @@ const GuessGame: React.FC = () => {
             </h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <div className="p-4 rounded-lg bg-galaxy-dark/70 border border-galaxy-purple/20">
-                <p className="text-xl text-galaxy-blue font-bold">{gameStats.totalWishes}</p>
+              <div className="p-4 rounded-lg bg-space-darker/70 border border-space-purple/20">
+                <p className="text-xl text-space-teal font-bold">{gameStats.totalWishes}</p>
                 <p className="text-sm text-gray-400">Total Wishes</p>
               </div>
-              <div className="p-4 rounded-lg bg-galaxy-dark/70 border border-galaxy-purple/20">
+              <div className="p-4 rounded-lg bg-space-darker/70 border border-space-purple/20">
                 <p className="text-xl text-green-400 font-bold">{gameStats.guessedCorrectly}</p>
                 <p className="text-sm text-gray-400">Correct Guesses</p>
               </div>
-              <div className="p-4 rounded-lg bg-galaxy-dark/70 border border-galaxy-purple/20">
+              <div className="p-4 rounded-lg bg-space-darker/70 border border-space-purple/20">
                 <p className="text-xl text-yellow-400 font-bold">{gameStats.skipped}</p>
                 <p className="text-sm text-gray-400">Skipped</p>
               </div>
@@ -81,7 +81,7 @@ const GuessGame: React.FC = () => {
               Thank you for exploring all your cosmic birthday messages. May your year ahead be filled with wonder and joy!
             </p>
             <Link to="/">
-              <Button className="bg-galaxy-blue hover:bg-galaxy-blue/80 text-black font-medium px-6 py-5 rounded-full">
+              <Button className="bg-space-teal hover:bg-space-teal/80 text-black font-medium px-6 py-5 rounded-full">
                 Return to Stars
               </Button>
             </Link>
@@ -95,7 +95,7 @@ const GuessGame: React.FC = () => {
             </div>
             <Progress 
               value={calculateProgress()} 
-              className="w-32 h-2 bg-galaxy-dark/50" 
+              className="w-32 h-2 bg-space-darker/50" 
             />
           </div>
           
@@ -106,14 +106,14 @@ const GuessGame: React.FC = () => {
             >
               <div className="relative w-full h-full">
                 <div 
-                  className="absolute top-10 right-10 w-8 h-8 rounded-full bg-galaxy-blue"
+                  className="absolute top-10 right-10 w-8 h-8 rounded-full bg-space-teal"
                   style={{ 
-                    boxShadow: '0 0 30px 10px rgba(138,180,248,0.6), 0 0 60px 20px rgba(138,180,248,0.4)'
+                    boxShadow: '0 0 30px 10px rgba(62,252,252,0.6), 0 0 60px 20px rgba(62,252,252,0.4)'
                   }}
                 ></div>
                 
                 {/* Comet trail */}
-                <div className="absolute top-12 right-12 w-40 h-2 bg-gradient-to-l from-galaxy-blue via-galaxy-blue/50 to-transparent transform rotate-45"></div>
+                <div className="absolute top-12 right-12 w-40 h-2 bg-gradient-to-l from-space-teal via-space-teal/50 to-transparent transform rotate-45"></div>
                 
                 {/* Particles */}
                 {[...Array(20)].map((_, i) => (
@@ -141,6 +141,24 @@ const GuessGame: React.FC = () => {
               onNext={handleNext}
             />
           )}
+          
+          <div className="flex justify-between items-center mt-8">
+            <div className="flex items-center">
+              <Star className="h-4 w-4 text-yellow-400 mr-1" />
+              <span className="text-gray-400 text-sm">Guess who sent each wish!</span>
+            </div>
+            
+            {currentWishIndex < wishes.length - 1 && (
+              <Button
+                variant="ghost"
+                onClick={handleNext}
+                className="text-space-teal hover:text-space-teal/80 group"
+              >
+                Next wish
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Button>
+            )}
+          </div>
         </>
       )}
     </div>

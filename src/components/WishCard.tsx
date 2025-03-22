@@ -25,7 +25,6 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
   const [previousGuesses, setPreviousGuesses] = useState<string[]>([]);
   const [gameProgress, setGameProgress] = useState(0);
   const { toast } = useToast();
-  const inputRef = useRef<HTMLInputElement>(null);
   
   const MAX_ATTEMPTS = 5;
   
@@ -45,10 +44,6 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
       cardRef.current.classList.add('opacity-0', 'translate-y-20');
       setTimeout(() => {
         cardRef.current?.classList.add('opacity-100', 'translate-y-0');
-        // Focus the input after animation
-        setTimeout(() => {
-          inputRef.current?.focus();
-        }, 500);
       }, 300);
     }
   }, [wish.id]);
@@ -135,9 +130,9 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
   return (
     <div 
       ref={cardRef}
-      className="glass-nebula p-6 md:p-8 max-w-2xl w-full mx-auto opacity-0 translate-y-20 transition-all duration-700 ease-out"
+      className="glass-card p-6 md:p-8 max-w-2xl w-full mx-auto opacity-0 translate-y-20 transition-all duration-700 ease-out"
     >
-      {/* Nebula dust particles */}
+      {/* Comet trail particles */}
       <div className="absolute top-0 right-0 transform -translate-y-full">
         {[...Array(10)].map((_, i) => (
           <div 
@@ -157,8 +152,8 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
       
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <Sparkles className="h-5 w-5 mr-2 text-galaxy-blue" />
-          <h3 className="text-lg font-medium text-galaxy-blue">Cosmic Message</h3>
+          <Sparkles className="h-5 w-5 mr-2 text-space-teal" />
+          <h3 className="text-lg font-medium text-space-teal">Cosmic Message</h3>
         </div>
         <div className="text-sm font-medium text-gray-400">
           {attempts}/{MAX_ATTEMPTS} Guesses
@@ -168,8 +163,8 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
       <Progress 
         value={gameProgress} 
         className={cn(
-          "h-1.5 mb-4 bg-galaxy-dark/50",
-          gameProgress < 60 ? "text-galaxy-blue" : 
+          "h-1.5 mb-4 bg-space-darker/50",
+          gameProgress < 60 ? "text-space-teal" : 
           gameProgress < 80 ? "text-yellow-500" : 
           "text-red-500"
         )}
@@ -179,82 +174,78 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
         <p className="text-xl leading-relaxed">"{visibleMessage}"</p>
       </div>
       
-      {/* Guess input section - only show if not correct or revealed */}
-      {!isCorrect && !revealed && (
-        <div className="transition-all duration-500">
-          <p className="mb-2 text-sm font-medium text-gray-300">
-            Guess who sent this wish? ({MAX_ATTEMPTS - attempts} attempts left)
-          </p>
-          
-          <div className="flex gap-2 relative">
-            <Input
-              ref={inputRef}
-              value={guess}
-              onChange={(e) => setGuess(e.target.value)}
-              placeholder="Enter name..."
-              className="flex-1 bg-galaxy-dark/50 border-galaxy-purple/30 focus:border-galaxy-blue focus-visible:ring-galaxy-blue"
-              onKeyDown={(e) => e.key === 'Enter' && handleGuess()}
-              autoComplete="off"
-              style={{ zIndex: 10 }}
-            />
-            
-            <Button 
-              onClick={handleGuess}
-              className="bg-galaxy-purple hover:bg-galaxy-purple/80"
-              style={{ zIndex: 10 }}
-            >
-              Guess
-            </Button>
-          </div>
-          
-          {previousGuesses.length > 0 && (
-            <div className="mt-4 space-y-1">
-              <p className="text-xs text-gray-400">Previous guesses:</p>
-              <div className="flex flex-wrap gap-1.5">
-                {previousGuesses.map((prevGuess, index) => (
-                  <div 
-                    key={index} 
-                    className="text-xs px-2 py-1 rounded-full bg-galaxy-dark/80 border border-galaxy-purple/30 flex items-center"
-                  >
-                    <span>{prevGuess}</span>
-                    <X className="ml-1 h-3 w-3 text-red-400" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+      <div className={cn(
+        "transition-all duration-500",
+        (isCorrect || revealed) ? "opacity-0 pointer-events-none" : "opacity-100"
+      )}>
+        <p className="mb-2 text-sm font-medium text-gray-300">
+          Guess who sent this wish? ({MAX_ATTEMPTS - attempts} attempts left)
+        </p>
+        
+        <div className="flex gap-2">
+          <Input
+            value={guess}
+            onChange={(e) => setGuess(e.target.value)}
+            placeholder="Enter name..."
+            className="flex-1 bg-space-darker/50 border-space-purple/30 focus:border-space-teal"
+            onKeyDown={(e) => e.key === 'Enter' && handleGuess()}
+          />
           
           <Button 
-            variant="ghost" 
-            className="mt-4 text-sm text-gray-400 hover:text-white"
-            onClick={handleSkip}
+            onClick={handleGuess}
+            className="bg-space-purple hover:bg-space-purple/80"
           >
-            Skip this wish
+            Guess
           </Button>
         </div>
-      )}
-      
-      {/* Result section - only show when correct or revealed */}
-      {(isCorrect || revealed) && (
-        <div className="transition-all duration-500 transform scale-100">
-          <div className="text-center p-4 rounded-lg bg-galaxy-dark/50 border border-galaxy-purple/20">
-            {isCorrect ? (
-              <>
-                <div className="flex items-center justify-center mb-2">
-                  <Check className="h-5 w-5 text-green-500 mr-2" />
-                  <p className="text-xl font-medium text-galaxy-blue">That's correct!</p>
+        
+        {previousGuesses.length > 0 && (
+          <div className="mt-4 space-y-1">
+            <p className="text-xs text-gray-400">Previous guesses:</p>
+            <div className="flex flex-wrap gap-1.5">
+              {previousGuesses.map((prevGuess, index) => (
+                <div 
+                  key={index} 
+                  className="text-xs px-2 py-1 rounded-full bg-space-darker/80 border border-space-purple/30 flex items-center"
+                >
+                  <span>{prevGuess}</span>
+                  <X className="ml-1 h-3 w-3 text-red-400" />
                 </div>
-                <p className="text-gray-300">This wish was from {wish.sender}</p>
-              </>
-            ) : (
-              <>
-                <p className="text-gray-300 mb-2">This wish was from</p>
-                <p className="text-2xl font-medium galaxy-shimmer">{wish.sender}</p>
-              </>
-            )}
+              ))}
+            </div>
           </div>
+        )}
+        
+        <Button 
+          variant="ghost" 
+          className="mt-4 text-sm text-gray-400 hover:text-white"
+          onClick={handleSkip}
+        >
+          Skip this wish
+        </Button>
+      </div>
+      
+      <div className={cn(
+        "transition-all duration-500 transform",
+        (isCorrect || revealed) ? "opacity-100 scale-100" : "opacity-0 scale-95 absolute pointer-events-none"
+      )}>
+        <div className="text-center p-4 rounded-lg bg-space-darker/50 border border-space-purple/20">
+          {isCorrect ? (
+            <>
+              <div className="flex items-center justify-center mb-2">
+                <Check className="h-5 w-5 text-green-500 mr-2" />
+                <p className="text-xl font-medium text-space-teal">That's correct!</p>
+              </div>
+              <p className="text-gray-300">This wish was from {wish.sender}</p>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-300 mb-2">This wish was from</p>
+              <p className="text-2xl font-medium shimmer-text">{wish.sender}</p>
+            </>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
