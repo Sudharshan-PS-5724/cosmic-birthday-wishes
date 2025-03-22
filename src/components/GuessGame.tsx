@@ -166,7 +166,7 @@ const GuessGame: React.FC = () => {
         onClick={() => {
           if (audioRef.current) {
             if (audioRef.current.paused) {
-              audioRef.current.play();
+              audioRef.current.play().catch(e => console.log("Play error:", e));
             } else {
               audioRef.current.pause();
             }

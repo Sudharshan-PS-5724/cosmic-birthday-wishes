@@ -25,6 +25,7 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
   const [previousGuesses, setPreviousGuesses] = useState<string[]>([]);
   const [gameProgress, setGameProgress] = useState(0);
   const { toast } = useToast();
+  const inputRef = useRef<HTMLInputElement>(null);
   
   const MAX_ATTEMPTS = 5;
   
@@ -44,6 +45,10 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
       cardRef.current.classList.add('opacity-0', 'translate-y-20');
       setTimeout(() => {
         cardRef.current?.classList.add('opacity-100', 'translate-y-0');
+        // Focus the input after animation
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 500);
       }, 300);
     }
   }, [wish.id]);
@@ -183,10 +188,11 @@ const WishCard: React.FC<WishCardProps> = ({ wish, onNext }) => {
           
           <div className="flex gap-2">
             <Input
+              ref={inputRef}
               value={guess}
               onChange={(e) => setGuess(e.target.value)}
               placeholder="Enter name..."
-              className="flex-1 bg-galaxy-dark/50 border-galaxy-purple/30 focus:border-galaxy-blue"
+              className="flex-1 bg-galaxy-dark/50 border-galaxy-purple/30 focus:border-galaxy-blue focus-visible:ring-galaxy-blue"
               onKeyDown={(e) => e.key === 'Enter' && handleGuess()}
             />
             
