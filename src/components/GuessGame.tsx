@@ -1,10 +1,9 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Wish, useWishContext } from '@/context/WishContext';
+import React, { useState, useEffect } from 'react';
+import { useWishContext } from '@/context/WishContext';
 import WishCard from './WishCard';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Trophy, Star } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Progress } from '@/components/ui/progress';
 
@@ -12,40 +11,11 @@ const GuessGame: React.FC = () => {
   const { wishes, currentWishIndex, setCurrentWishIndex } = useWishContext();
   const [isFinished, setIsFinished] = useState(false);
   const [showComet, setShowComet] = useState(false);
-  const [audioLoaded, setAudioLoaded] = useState(false);
   const [gameStats, setGameStats] = useState({
     totalWishes: wishes.length,
     guessedCorrectly: 0,
     skipped: 0
   });
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  
-  useEffect(() => {
-    // Initialize audio player
-    const audio = new Audio('/coward.mp3');
-    audio.volume = 0.4;
-    audio.loop = true;
-    audioRef.current = audio;
-    
-    // Add event listener to check when audio is loaded
-    audio.addEventListener('canplaythrough', () => {
-      setAudioLoaded(true);
-      audio.play().catch(err => console.log('Audio autoplay prevented:', err));
-    });
-    
-    // Add error listener
-    audio.addEventListener('error', (e) => {
-      console.log('Audio error:', e);
-    });
-    
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = '';
-        audioRef.current = null;
-      }
-    };
-  }, []);
   
   useEffect(() => {
     // Show comet animation for each new wish
@@ -173,27 +143,6 @@ const GuessGame: React.FC = () => {
           )}
         </>
       )}
-      
-      {/* Sound control button */}
-      <button 
-        onClick={() => {
-          if (audioRef.current) {
-            if (audioRef.current.paused) {
-              audioRef.current.play().catch(e => console.log("Play error:", e));
-            } else {
-              audioRef.current.pause();
-            }
-          }
-        }}
-        className="fixed bottom-4 right-4 bg-galaxy-dark/70 p-2 rounded-full border border-galaxy-purple/30 text-galaxy-blue hover:text-galaxy-pink transition-colors z-20"
-        title={audioRef.current?.paused ? "Play Music" : "Pause Music"}
-      >
-        {audioRef.current?.paused ? (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-        )}
-      </button>
     </div>
   );
 };
