@@ -145,7 +145,6 @@ const GuessGame: React.FC = () => {
           <div className="flex justify-between items-center mt-8">
             <div className="flex items-center">
               <Star className="h-4 w-4 text-yellow-400 mr-1" />
-              <span className="text-gray-400 text-sm">Guess who sent each wish!</span>
             </div>
             
             {currentWishIndex < wishes.length - 1 && (
@@ -153,10 +152,7 @@ const GuessGame: React.FC = () => {
                 variant="ghost"
                 onClick={handleNext}
                 className="text-space-teal hover:text-space-teal/80 group"
-              >
-                Next wish
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Button>
+              ></Button>
             )}
           </div>
         </>
