@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface Wish {
@@ -139,6 +138,30 @@ export const WishProvider = ({ children }: WishProviderProps) => {
     "id": 18,
     "message": "Happiee birthday Sweths!!!!. Have fun turning 21 🍾😏 It feels like just yesterday we finished school and joined college and here we are celebrating your last year of college life. So make some memories and cherish every moment happening this year.\nKeep smiling and laughing (don't lose your style) and keep achieving many things. I really wish u all the best for your upcoming job and interviews as u will be entering into different world. Be strong and take care of yourself.. 💕",
     "sender": "Harshini",
+    "guessed": false
+  },
+  {
+    "id": 19,
+    "message": "To the Birthday Queen (who totally has no clue who this is),\n\nHappy 21st, you absolute icon! 🎉 You’re strong, kind, and effortlessly likable. You push through doubts, stay ahead, and—let’s be real—best-dressed in our friend group. Statement or simple, you always pull it off.\n\nNow, Miss Independent, I know you want to do it all alone, but even queens have royal advisors. Just remember, you’ve got people (including this totally anonymous well-wisher) who always have your back.\n\nSo here’s to Swetha at 21—great outfits, good company, and zero wardrobe dilemmas. Stay fabulous!\n\nYour Favorite Mystery Well-Wisher 😌🎂✨",
+    "sender": "Deshna",
+    "guessed": false
+  },
+  {
+    "id": 20,
+    "message": "A person whose loud laugh couldn't be easily erased from my mind. Who always has a perspective that others may find interesting, if at all they truly understood them. The one I've seen who stands for the self, no matter what the world thinks or the situation around her. May this person smile throughout her life with God's blessings and lead a successful life. Happy birthday, Swe, as you step into your twenties! 🎉✨",
+    "sender": "Singaram",
+    "guessed": false
+  },
+  {
+    "id": 21,
+    "message": "Hi Swetha,\nWishing you a happiest bday 🥳💫! You are a person who is fun to be around… something that I wanna learn from you is your confidence. Happy 21!!!!✨",
+    "sender": "Shreya",
+    "guessed": false
+  },
+  {
+    "id": 22,
+    "message": "Second chance for me. Last chance for us. Let’s try to enjoy it to the fullest. Happiest birthday to the silly yet true girl I have ever seen. May your success be everlasting and continue the dream run. Time flies, yes, but I think it flies because people need to treasure the moments. Two highly conflicting persons. Looking forward to more fights and debates…\n\nSudharshan P S",
+    "sender": "Sudharshan",
     "guessed": false
   }
   ]);
